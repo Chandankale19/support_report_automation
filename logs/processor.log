@@ -1,0 +1,33 @@
+2024-10-17 20:51:44,999 - INFO - Logging is set up successfully.
+2024-10-17 20:51:44,999 - INFO - Loading file: GJ_Overall.csv
+2024-10-17 20:51:45,014 - INFO - Successfully loaded file: data/input/GJ_Overall.csv with 1226 rows.
+2024-10-17 20:51:45,015 - INFO - Removed columns: []
+2024-10-17 20:51:45,023 - INFO - Successfully processed DataFrame and created new date and time columns.
+2024-10-17 20:51:45,024 - INFO - Imputed null values in column 'Problem Reported' with value 'Problem not found'.
+2024-10-17 20:51:45,025 - INFO - Imputed null values in column 'Bot Name' with value 'Unidentified Bot Name'.
+2024-10-17 20:51:45,109 - INFO - Processing completed for file: GJ_Overall.csv
+2024-10-17 20:58:37,124 - INFO - Logging is set up successfully.
+2024-10-17 20:58:37,124 - INFO - Loading file: GJ_Overall.csv
+2024-10-17 20:58:37,154 - INFO - Successfully loaded file: data/input/GJ_Overall.csv with 1226 rows.
+2024-10-17 20:58:37,155 - INFO - Removed columns: ['Hardware ID/Serial Number', 'Child Ticket Count', 'Similar issue Count', 'State Name', 'UDISE_Code', 'Block_Name', 'School_Code', 'School_Name', 'ICT-Reported-Problems', 'Infra-Status', 'NIC Code', 'Server A or B', 'Block', 'UDISE Code', 'Block Name', 'District Names', 'Admin Code/School Code', 'Project Code', 'Project Name', 'Partner Name', 'Device Model Number', 'School Name', 'District', 'FMS Email', 'Reason for On-Hold', 'Select Your Issue', 'Steps Performed', 'Actual Problem', 'Classification', 'Time to Respond', 'Team', 'Team Id', 'Tags', 'Ticket On Hold Time', 'Category', 'Sub Category', 'Resolution', 'To Address', 'Account Name', 'Account Id', 'Due Date']
+2024-10-17 20:58:37,163 - INFO - Successfully processed DataFrame and created new date and time columns.
+2024-10-17 20:58:37,164 - INFO - Imputed null values in column 'Problem Reported' with value 'Problem not found'.
+2024-10-17 20:58:37,165 - INFO - Imputed null values in column 'Bot Name' with value 'Unidentified Bot Name'.
+2024-10-17 20:58:37,245 - INFO - Processing completed for file: GJ_Overall.csv
+2024-10-17 20:59:26,552 - INFO - Logging is set up successfully.
+2024-10-17 20:59:26,552 - INFO - Loading file: GJ_Overall.csv
+2024-10-17 20:59:26,567 - INFO - Successfully loaded file: data/input/GJ_Overall.csv with 1226 rows.
+2024-10-17 20:59:26,568 - INFO - Removed columns: ['Hardware ID/Serial Number', 'Child Ticket Count', 'Similar issue Count', 'State Name', 'UDISE_Code', 'Block_Name', 'School_Code', 'School_Name', 'ICT-Reported-Problems', 'Infra-Status', 'NIC Code', 'Server A or B', 'Block', 'UDISE Code', 'Block Name', 'District Names', 'Admin Code/School Code', 'Project Code', 'Project Name', 'Partner Name', 'Device Model Number', 'School Name', 'District', 'FMS Email', 'Reason for On-Hold', 'Select Your Issue', 'Steps Performed', 'Actual Problem', 'Classification', 'Time to Respond', 'Team', 'Team Id', 'Tags', 'Ticket On Hold Time', 'Category', 'Sub Category', 'Resolution', 'To Address', 'Account Name', 'Account Id', 'Due Date']
+2024-10-17 20:59:26,577 - INFO - Successfully processed DataFrame and created new date and time columns.
+2024-10-17 20:59:26,578 - INFO - Imputed null values in column 'Problem Reported' with value 'Problem not found'.
+2024-10-17 20:59:26,579 - INFO - Imputed null values in column 'Bot Name' with value 'Unidentified Bot Name'.
+2024-10-17 20:59:26,674 - INFO - Processing completed for file: GJ_Overall.csv
+2024-10-17 20:59:26,674 - INFO - Moved file GJ_Overall.csv to archive: data/archive/GJ_Overall.csv
+2024-10-17 21:03:28,223 - INFO - Logging is set up successfully.
+2024-10-17 21:03:28,223 - INFO - Loading file: GJ_Overall.csv
+2024-10-17 21:05:50,416 - INFO - Logging is set up successfully.
+2024-10-17 21:05:50,416 - INFO - Loading file: GJ_Overall.csv
+2024-10-17 21:06:14,224 - INFO - Logging is set up successfully.
+2024-10-17 21:06:14,224 - INFO - Loading file: GJ_Overall.csv
+2024-10-17 21:08:27,373 - INFO - Logging is set up successfully.
+2024-10-17 21:08:27,373 - INFO - Loading file: GJ_Overall.csv
