@@ -191,6 +191,11 @@ def process_csv_files_in_folder(input_folder):
             column_name = 'Mode'
             total_onhold_ticket_dict = processor.count_bot_wise_status_tickets(splitted_df_dict,splitted_df_key_list,mode_list,status_column,status_value)
             # print(total_onhold_ticket_dict)
+            
+            # Total Problem reported Botwise
+            comparison_values = list(current_week_df['Problem Reported'].unique())
+            column_name='Problem Reported'
+            problem_reported_count_dict_botwise = processor.problem_reported_count_botwise(splitted_df_dict,splitted_df_key_list,comparison_values,column_name)
 
             last_archive_df = processor.filter_before_last_8_days(main_df)
 
@@ -214,9 +219,17 @@ def process_csv_files_in_folder(input_folder):
 
             # Define a mode-wise pivot dictionary (You can replace this with the actual one)
             mode_wise_data_dict = total_ticket_received_count_dict_modewise
+
+            # Botwise Problem Reported Pivote 
+            problem_reported_botwise_df = pd.DataFrame(problem_reported_count_dict_botwise)
+
+            # Transpose the DataFrame to get the desired tabular format
+            problem_reported_botwise_df = problem_reported_botwise_df.transpose()
+            # print(problem_reported_botwise_pivote)
+
             # File path for saving the Excel report
             output_file_path = 'data/output/Report.xlsx'
-            processor.create_excel_with_pivot_and_dicts(mode_wise_data_dict, dict_mapping,output_file_path)
+            processor.create_excel_with_pivot_and_dicts(mode_wise_data_dict, dict_mapping, problem_reported_botwise_df, output_file_path)
 
             archive_folder = "data/archive"
 
