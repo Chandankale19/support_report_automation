@@ -148,12 +148,12 @@ class TicketProcessor:
                 print(f"Warning: Key '{bot_key}' does not exist in the dictionary. Skipping...")
                 continue
 
-            df = splitted_df_dict[bot_key]  # Get the DataFrame associated with the key
+            df = splitted_df_dict[bot_key].copy()  # Get the DataFrame associated with the key
             # print(df.head(10))
 
             # Check if the column exists in the current DataFrame
             if column_name not in df.columns:
-                print(f"Warning: Column '{column_name}' does not exist in DataFrame '{key}'. Skipping...")
+                print(f"Warning: Column '{column_name}' does not exist in DataFrame '{bot_key}'. Skipping...")
                 continue
 
             # Clean the column (lowercase and strip)
