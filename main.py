@@ -148,7 +148,6 @@ def process_csv_files_in_folder(input_folder):
             comparison_values = list(main_df['Mode'].unique())
             column_name='Mode'
             total_ticket_received_count_dict = processor.total_ticket_received_count(splitted_df_dict,splitted_df_key_list,comparison_values,column_name)
-            # print(total_ticket_received_count_dict)
 
             status_column='Status'
             status_value='Closed'
@@ -192,21 +191,16 @@ def process_csv_files_in_folder(input_folder):
             total_onhold_ticket_dict = processor.count_bot_wise_status_tickets(splitted_df_dict,splitted_df_key_list,mode_list,status_column,status_value)
             # print(total_onhold_ticket_dict)
             
-            # Total Problem reported Botwise
-            comparison_values = list(current_week_df['Problem Reported'].unique())
-            column_name='Problem Reported'
-            problem_reported_count_dict_botwise = processor.problem_reported_count_botwise(splitted_df_dict,splitted_df_key_list,comparison_values,column_name)
-
             last_archive_df = processor.filter_before_last_8_days(main_df)
 
-            splitted_df_dict_last = processor.split_dataframe_by_bot_name(last_archive_df,bot_name_list)
+            splitted_df_dict_archive = processor.split_dataframe_by_bot_name(last_archive_df,bot_name_list)
 
             # Total Open Tickets {Email + Phone + Web + Chat}
             status_column='Status'
             status_value='Open'
-            splitted_df_key_list = list(splitted_df_dict_last.keys())
+            splitted_df_key_list = list(splitted_df_dict_archive.keys())
             column_name = 'Mode'
-            total_archive_open_ticket_dict = processor.count_bot_wise_status_tickets(splitted_df_dict_last,splitted_df_key_list,mode_list,status_column,status_value)
+            total_archive_open_ticket_dict = processor.count_bot_wise_status_tickets(splitted_df_dict_archive,splitted_df_key_list,mode_list,status_column,status_value)
             # print(total_archive_open_ticket_dict)
 
             # Create a mapping of variable names to the actual dictionaries
@@ -219,17 +213,63 @@ def process_csv_files_in_folder(input_folder):
 
             # Define a mode-wise pivot dictionary (You can replace this with the actual one)
             mode_wise_data_dict = total_ticket_received_count_dict_modewise
+            
+            ## ----------------------- Current Week ------------------------------- ##
+            # Total Problem reported Botwise
+            comparison_values_cw = list(current_week_df['Problem Reported'].unique())
+            column_name='Problem Reported'
+            problem_reported_count_total_dict = processor.problem_reported_count_botwise(splitted_df_dict, splitted_df_key_list, comparison_values_cw, column_name)
+            problem_reported_cw_total_df = pd.DataFrame(problem_reported_count_total_dict).transpose()
+            
+            status_column='Status'
 
-            # Botwise Problem Reported Pivote 
-            problem_reported_botwise_df = pd.DataFrame(problem_reported_count_dict_botwise)
+            status_value='Closed'
+            problem_reported_dict_closed = processor.problem_reported_count_botwise_statuswise(splitted_df_dict, splitted_df_key_list, comparison_values_cw, column_name, status_column, status_value)
+            problem_reported_closed_df = pd.DataFrame(problem_reported_dict_closed).transpose()
 
-            # Transpose the DataFrame to get the desired tabular format
-            problem_reported_botwise_df = problem_reported_botwise_df.transpose()
-            # print(problem_reported_botwise_pivote)
+            status_value='Open'
+            problem_reported_dict_open = processor.problem_reported_count_botwise_statuswise(splitted_df_dict, splitted_df_key_list, comparison_values_cw, column_name, status_column, status_value)
+            problem_reported_open_df = pd.DataFrame(problem_reported_dict_open).transpose()
 
+            status_value='On Hold'
+            problem_reported_dict_onHold = processor.problem_reported_count_botwise_statuswise(splitted_df_dict, splitted_df_key_list, comparison_values_cw, column_name, status_column, status_value)
+            problem_reported_onhold_df = pd.DataFrame(problem_reported_dict_onHold).transpose()
+
+            # ----------------------- Archive Data ------------------------------- ##
+            # Total Problem reported Botwise
+            comparison_values = list(last_archive_df['Problem Reported'].unique())
+            column_name='Problem Reported'
+            problem_reported_dict_total_archive = processor.problem_reported_count_botwise(splitted_df_dict_archive,splitted_df_key_list,comparison_values,column_name)
+            problem_reported_total_df_archive = pd.DataFrame(problem_reported_dict_total_archive).transpose()
+
+            status_column='Status'
+
+            status_value='Closed'
+            problem_reported_dict_closed_archive = processor.problem_reported_count_botwise_statuswise(splitted_df_dict_archive, splitted_df_key_list, comparison_values, column_name, status_column, status_value)
+            problem_reported_closed_df_archive = pd.DataFrame(problem_reported_dict_closed_archive).transpose()
+
+            status_value='Open'
+            problem_reported_dict_open_archive = processor.problem_reported_count_botwise_statuswise(splitted_df_dict_archive, splitted_df_key_list, comparison_values, column_name, status_column, status_value)
+            problem_reported_open_df_archive = pd.DataFrame(problem_reported_dict_open_archive).transpose()
+
+            status_value='On Hold'
+            problem_reported_dict_onHold_archive = processor.problem_reported_count_botwise_statuswise(splitted_df_dict_archive, splitted_df_key_list, comparison_values, column_name, status_column, status_value)
+            problem_reported_onhold_df_archive = pd.DataFrame(problem_reported_dict_onHold_archive).transpose()
+
+            statuswise_problem_df_dict = {
+                        'Problem Reported Current Week(Total)': problem_reported_cw_total_df,
+                        'Problem Reported Current Week(Closed)': problem_reported_closed_df,
+                        'Problem Reported Current Week(Open)': problem_reported_open_df,
+                        'Problem Reported Current Week(On Hold)': problem_reported_onhold_df,
+                        'Problem Reported Archive(Total)': problem_reported_total_df_archive,
+                        'Problem Reported Archive(Closed)': problem_reported_closed_df_archive,
+                        'Problem Reported Archive(Open)': problem_reported_open_df_archive,
+                        'Problem Reported Archive(On Hold)': problem_reported_onhold_df_archive
+                        }
+            
             # File path for saving the Excel report
             output_file_path = 'data/output/Report.xlsx'
-            processor.create_excel_with_pivot_and_dicts(mode_wise_data_dict, dict_mapping, problem_reported_botwise_df, output_file_path)
+            processor.create_excel_with_pivot_and_dicts(mode_wise_data_dict, dict_mapping,statuswise_problem_df_dict, output_file_path)
 
             archive_folder = "data/archive"
 

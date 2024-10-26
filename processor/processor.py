@@ -178,7 +178,58 @@ class TicketProcessor:
 
         return mode_counts
 
-    def create_excel_with_pivot_and_dicts(self, mode_wise_data_dict, dict_mapping, problem_reported_botwise_df , file_path):
+    def problem_reported_count_botwise_statuswise(self, splitted_df_dict, splitted_df_key_list, comparison_values, column_name, status_column, status_value):
+        """
+        Count occurrences of specified values in a specified column for a dictionary of DataFrames, filtered by a status condition.
+        The result is stored in separate dictionaries for each unique mode.
+
+        Parameters:
+        splitted_df_dict (dict): A dictionary of DataFrames to process, with keys as identifiers.
+        splitted_df_key_list (list): A list of keys to specify which DataFrames to process.
+        comparison_values (list): A list of values (modes) to count in the specified column.
+        column_name (str): The name of the column to check (e.g., 'Mode').
+        status_column (str): The name of the status column to filter by (default is 'Status').
+        status_value (str): The value in the status column to filter on (default is 'Open').
+
+        Returns:
+        dict: A dictionary where each mode has its own sub-dictionary containing counts for each DataFrame.
+        """
+        # Initialize an empty dictionary to store results for each mode
+        mode_counts = {value: {} for value in comparison_values}
+
+        # Loop through each key in the provided key list
+        for bot_key in splitted_df_key_list:
+            if bot_key not in splitted_df_dict.keys():
+                print(f"Warning: Key '{bot_key}' does not exist in the dictionary. Skipping...")
+                continue
+
+            df = splitted_df_dict[bot_key].copy()  # Get the DataFrame associated with the key
+
+            # Check if the required columns exist in the current DataFrame
+            if column_name not in df.columns or status_column not in df.columns:
+                print(f"Warning: Required columns '{column_name}' or '{status_column}' do not exist in DataFrame '{bot_key}'. Skipping...")
+                continue
+
+            # Filter the DataFrame for rows where the status column matches the status value
+            filtered_df = df[df[status_column].str.lower().str.strip() == status_value.lower().strip()]
+
+            # Clean the target column (lowercase and strip)
+            filtered_df.loc[:, column_name] = filtered_df[column_name].str.lower().str.strip()
+
+            # Loop through each value (mode) in the comparison values list
+            for value in comparison_values:
+                # Clean the comparison value (lowercase and strip)
+                cleaned_value = value.lower().strip()
+
+                # Count occurrences of the cleaned value in the specified column for the filtered DataFrame
+                count = (filtered_df[column_name] == cleaned_value).sum()
+
+                # Store the count in the respective mode's dictionary
+                mode_counts[value][bot_key] = count
+
+        return mode_counts
+
+    def create_excel_with_pivot_and_dicts(self, mode_wise_data_dict, dict_mapping, statuswise_problem_df_dict, file_path):
         """
         Creates an Excel file with a mode-wise pivot at the top followed by multiple dictionaries.
 
@@ -193,7 +244,8 @@ class TicketProcessor:
         # Create a new workbook and select the active worksheet
         wb = Workbook()
         ws = wb.active
-
+        # Set the title of the worksheet
+        ws.title = "Ticket data status"
         # Define bold fonts for different headers
         bold_font = Font(bold=True, size=14)
         medium_font = Font(bold=True, size=12)
@@ -238,21 +290,41 @@ class TicketProcessor:
             # Add a blank row after each dictionary
             ws.append([])
 
-        # Part 3: Write the output DataFrame at the end
-        if not problem_reported_botwise_df.empty:
-            # Add a new worksheet for the DataFrame
-            ws_output = wb.create_sheet(title='Problem Reported Details')
+        # # Part 3: Write the output DataFrame at the end
+        # if not problem_reported_botwise_df.empty:
+        #     # Add a new worksheet for the DataFrame
+        #     ws_output = wb.create_sheet(title='Problem Reported Details')
 
-            # Write the DataFrame header
-            # Write the DataFrame header with a margin (one cell padding)
-            header = ['Problem Reported'] + list(problem_reported_botwise_df.columns)  # Add an empty string for padding
-            ws_output.append(header)
-            for col_num in range(1, len(header) + 1):
-                ws_output.cell(row=1, column=col_num).font = medium_font
+        #     # Write the DataFrame header
+        #     # Write the DataFrame header with a margin (one cell padding)
+        #     header = ['Problem Reported'] + list(problem_reported_botwise_df.columns)  # Add an empty string for padding
+        #     ws_output.append(header)
+        #     for col_num in range(1, len(header) + 1):
+        #         ws_output.cell(row=1, column=col_num).font = medium_font
 
-            # Write the DataFrame data
-            for row in problem_reported_botwise_df.itertuples(index=True):
-                ws_output.append(row)
+        #     # Write the DataFrame data
+        #     for row in problem_reported_botwise_df.itertuples(index=True):
+        #         ws_output.append(row)
+
+        # medium_font = Font(size=12, bold=True)  # Example font for headers
+
+        # # Part 4: Write the output of Multipal Dataframes into different sheet in same file
+        for sheet_name, df in statuswise_problem_df_dict.items():
+            # print(f'sheet name::{sheet_name} & df : {df}')
+            if not df.empty:
+                # Add a new worksheet with the name of the DataFrame
+                ws_output = wb.create_sheet(title=sheet_name)
+
+                # Write the DataFrame header with a margin
+                header = ['Problem Reported'] + list(df.columns)
+                ws_output.append(header)
+                
+                for col_num in range(1, len(header) + 1):
+                    ws_output.cell(row=1, column=col_num).font = medium_font
+
+                # Write the DataFrame data
+                for row in df.itertuples(index=True, name=None):
+                    ws_output.append(row)
         
         # Save the workbook to an Excel file
         wb.save(file_path)
